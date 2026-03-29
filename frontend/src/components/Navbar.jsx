@@ -41,7 +41,7 @@ const Navbar = ({ onOpenSidebar }) => {
           setDetectedLocation({ city: data.city, pincode: data.postal });
         }
       } catch (err) {
-        console.error('Failed to fetch IP location', err);
+        // Silently fail to avoid console clutter if API is down or rate-limited
       }
     };
 
@@ -161,7 +161,7 @@ const Navbar = ({ onOpenSidebar }) => {
         <div className="flex items-center gap-1 md:gap-0">
 
           {/* MOBILE SIGN IN LINK */}
-          <Link to={userInfo ? "/orders" : "/login"} className="flex items-center md:hidden pr-2 text-white no-underline">
+          <Link to={userInfo ? "/profile" : "/login"} className="flex items-center md:hidden pr-2 text-white no-underline">
             <span className="text-[13px] mr-1 font-medium">
               {userInfo ? (userInfo.name.split(' ')[0]) : 'Sign in ›'}
             </span>

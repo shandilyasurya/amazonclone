@@ -97,22 +97,24 @@ const CartPage = () => {
                       {product.is_prime && (
                         <span className="text-[11px] bg-[#0574F7] text-white font-bold px-1.5 py-0.5 rounded-sm w-fit">prime</span>
                       )}
-                      <div className="flex items-center gap-4 mt-1">
+                      <div className="flex items-center flex-wrap gap-2 md:gap-4 mt-2 mb-1">
                         <QuantitySelector
                           quantity={item.quantity}
                           setQuantity={(q) => handleQtyChange(item.id, q)}
                           max={product.stock}
                         />
-                        <span className="text-[#564E4E] text-[12px]">|</span>
-                        <button
-                          onClick={() => handleRemove(item.id)}
-                          className="text-[12px] text-[#007185] hover:text-[#C7511F] hover:underline flex items-center gap-1"
-                        >
-                          <Trash2 size={12} />
-                          Delete
-                        </button>
-                        <span className="text-[#564E4E] text-[12px]">|</span>
-                        <button className="text-[12px] text-[#007185] hover:underline">Save for later</button>
+                        <div className="flex items-center gap-2 md:gap-4 text-[#564E4E]">
+                          <span className="hidden xs:inline text-[12px]">|</span>
+                          <button
+                            onClick={() => handleRemove(item.id)}
+                            className="text-[12px] text-[#007185] hover:text-[#C7511F] hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 size={12} />
+                            Delete
+                          </button>
+                          <span className="text-[12px]">|</span>
+                          <button className="text-[12px] text-[#007185] hover:underline">Save for later</button>
+                        </div>
                       </div>
                     </div>
 

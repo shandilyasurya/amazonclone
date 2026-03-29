@@ -16,6 +16,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CreateReviewPage from './pages/CreateReviewPage';
 import WishlistPage from './pages/WishlistPage';
+import ProfilePage from './pages/ProfilePage';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
         {/* Protected routes within Layout */}
         <Route element={<ProtectedRoute />}>
           <Route path="cart" element={<CartPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="review/create-review/:id" element={<CreateReviewPage />} />
