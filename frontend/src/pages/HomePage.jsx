@@ -32,22 +32,45 @@ const PROMO_BANNERS = [
 /* ── Category card ── */
 const CategoryCard = ({ cat }) => {
   const d = CAT_DATA[cat.slug] || getFallback(cat.slug);
+  
+  // Custom prices for the "Starting at" mobile look
+  const startingPrices = {
+    electronics: '999',
+    clothing: '299',
+    'home-kitchen': '499',
+    books: '149',
+    'sports-fitness': '399',
+    beauty: '199'
+  };
+  const price = startingPrices[cat.slug] || '299';
+
   return (
-    <div className="bg-white p-4 flex flex-col h-full">
-      <h3 className="text-[17px] font-bold text-[#0F1111] mb-3 leading-tight">{cat.name}</h3>
+    <div className="bg-white p-4 flex flex-col h-full rounded-sm md:rounded-none">
+      {/* Mobile-only "Starting at" version of title */}
+      <div className="md:hidden mb-2">
+        <div className="flex items-baseline">
+          <span className="mobile-starting-label tracking-tight">Starting</span>
+          <span className="mobile-starting-price tracking-tight">₹{price}</span>
+        </div>
+        <p className="text-[15px] text-[#0F1111] font-medium mt-0.5">{cat.name}</p>
+      </div>
+
+      {/* Desktop version of title */}
+      <h3 className="hidden md:block text-[17px] font-bold text-[#0F1111] mb-3 leading-tight">{cat.name}</h3>
+
       <div className="grid grid-cols-2 gap-2 flex-1">
         {d.imgs.map((img, i) => (
           <Link key={i} to={`/search?category=${cat.slug}`} className="group flex flex-col gap-1">
-            <div className="aspect-square overflow-hidden bg-[#f3f3f3]">
+            <div className="aspect-square overflow-hidden bg-[#f3f3f3] rounded-md md:rounded-none">
               <img src={img} alt={d.labels[i]} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy"
                 onError={(e) => { e.target.src = `https://picsum.photos/seed/${cat.slug}${i}/200`; }} />
             </div>
-            <span className="text-[11px] text-[#0F1111] text-center leading-tight line-clamp-1">{d.labels[i]}</span>
+            <span className="text-[11px] text-[#0F1111] text-center leading-tight line-clamp-1 font-medium md:font-normal">{d.labels[i]}</span>
           </Link>
         ))}
       </div>
-      <Link to={`/search?category=${cat.slug}`} className="mt-3 text-[13px] text-[#007185] hover:text-[#C7511F] hover:underline">
-        See all in {cat.name} ›
+      <Link to={`/search?category=${cat.slug}`} className="mt-3 text-[13px] text-[#007185] hover:text-[#C7511F] hover:underline font-medium md:font-normal">
+        {cat.slug === 'clothing' ? 'Shop now' : `See all in ${cat.name}`} ›
       </Link>
     </div>
   );
@@ -82,6 +105,8 @@ const SkeletonCard = ({ compact }) => (
     </div>
   </div>
 );
+
+
 
 /* ── Horizontal scrollable section with arrow buttons ── */
 const ScrollSection = ({ title, viewAllLink, children }) => {
@@ -190,7 +215,9 @@ const HomePage = () => {
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="max-w-[1500px] mx-auto px-3 md:px-4 -mt-4 md:-mt-16 relative z-20">
+      <div className="max-w-[1500px] mx-auto px-2 md:px-4 -mt-2 md:-mt-16 relative z-20">
+
+
 
         {/* ── CATEGORY ROW 1 (4 cols, always full) ── */}
         {(loadingCat || row1.length > 0) && (
