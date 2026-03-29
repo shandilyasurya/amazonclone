@@ -18,6 +18,8 @@ const RegisterPage = () => {
   const [registerApi, { isLoading }] = useRegisterMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (userInfo) {
       navigate('/');
@@ -43,74 +45,91 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center py-6">
-      <Link to="/" className="mb-4">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-8 pb-16">
+      <Link to="/" className="mb-6">
         <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" 
+          src="https://links.papareact.com/f90" 
           alt="Amazon Logo" 
           className="w-[103px] object-contain"
+          onError={(e) => { e.target.src = "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"; }}
         />
       </Link>
       
-      <div className="w-[350px] border border-gray-300 rounded p-6">
-        <h1 className="text-3xl font-normal mb-4">Create Account</h1>
+      <div className="w-[350px] border border-[#ddd] rounded-[4px] p-6 shadow-sm">
+        <h1 className="text-[28px] font-normal leading-tight mb-4">Create account</h1>
         
         {errorMsg && (
-          <div className="bg-red-50 border border-red-400 text-red-700 px-3 py-2 rounded text-sm mb-4">
-            {errorMsg}
+          <div className="border border-[#C40000] bg-[#FFF6F6] rounded px-3 py-2 mb-4 text-[13px] text-[#C40000]">
+            <strong>There was a problem.</strong>
+            <p className="mt-0.5">{errorMsg}</p>
           </div>
         )}
 
-        <form onSubmit={submitHandler} className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <label className="font-bold text-[13px]">Your name</label>
+        <form onSubmit={submitHandler} className="flex flex-col gap-4">
+          <div>
+            <label className="block font-bold text-[13px] mb-1">Your name</label>
             <input 
               type="text" 
               required
               placeholder="First and last name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border border-gray-400 rounded px-3 py-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+              className="amz-input" 
             />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="font-bold text-[13px]">Email</label>
+          <div>
+            <label className="block font-bold text-[13px] mb-1">Email</label>
             <input 
               type="email" 
               required
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border border-gray-400 rounded px-3 py-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+              className="amz-input" 
             />
           </div>
           
-          <div className="flex flex-col gap-1">
-            <label className="font-bold text-[13px]">Password</label>
+          <div className="relative">
+            <label className="block font-bold text-[13px] mb-1">Password</label>
             <input 
-              type="password" 
+              type={showPassword ? 'text' : 'password'} 
               required
               placeholder="At least 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-400 rounded px-3 py-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+              className="amz-input pr-10" 
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-[26px] text-[11px] text-gray-500 hover:text-[#007185] font-medium"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+            <p className="text-[11px] text-gray-600 mt-1 flex items-center gap-1 italic">
+              ⓘ Passwords must be at least 6 characters.
+            </p>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="font-bold text-[13px]">Re-enter password</label>
+          <div>
+            <label className="block font-bold text-[13px] mb-1">Re-enter password</label>
             <input 
               type="password" 
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border border-gray-400 rounded px-3 py-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+              className="amz-input" 
             />
           </div>
           
-          <Button type="submit" fullWidth disabled={isLoading} className="mt-2 rounded-md">
+          <button 
+            type="submit" 
+            disabled={isLoading} 
+            className="btn-primary w-full h-[33px] rounded-[3px] text-[13px] shadow-sm hover:shadow-md active:shadow-inner transition-all mt-2"
+          >
             {isLoading ? 'Creating account...' : 'Create your Amazon account'}
-          </Button>
+          </button>
         </form>
         
         <p className="text-[12px] mt-4 text-gray-800">

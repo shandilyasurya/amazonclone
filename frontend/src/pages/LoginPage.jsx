@@ -13,8 +13,19 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => { if (userInfo) navigate('/'); }, [userInfo, navigate]);
+
+  const handleDemoLogin = async () => {
+    try {
+      const res = await login({ email: 'customer@amazon.com', password: 'password123' }).unwrap();
+      dispatch(setCredentials({ ...res.data }));
+      navigate('/');
+    } catch (err) {
+      setErrorMsg('Demo login failed. Make sure the database is seeded on Render.');
+    }
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -65,26 +76,47 @@ const LoginPage = () => {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block font-bold text-[13px] text-amz-body mb-1">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="amz-input"
+              className="amz-input pr-10"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-[26px] text-[11px] text-gray-500 hover:text-[#007185] font-medium"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="btn-primary w-full rounded-[3px] !rounded-[3px] h-[33px] text-[13px]"
+            className="btn-primary w-full rounded-[3px] !rounded-[3px] h-[33px] text-[13px] shadow-sm hover:shadow-md active:shadow-inner transition-all"
           >
             {isLoading ? 'Signing in…' : 'Sign in'}
+          </button>
+
+          <div className="relative flex items-center gap-3 my-1">
+            <div className="flex-1 border-t border-gray-100"></div>
+            <span className="text-[11px] text-gray-400">or try as guest</span>
+            <div className="flex-1 border-t border-gray-100"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="w-full h-[33px] border border-[#a2a6ac] bg-gradient-to-b from-[#f7f8fa] to-[#e7e9ec] hover:from-[#e7e9ec] hover:to-[#d9dce1] rounded-[3px] text-[13px] font-medium shadow-sm transition-all"
+          >
+            Quick Log In as Guest
           </button>
         </form>
 

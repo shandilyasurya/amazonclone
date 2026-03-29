@@ -68,16 +68,17 @@ const PromoCard = ({ banner }) => (
   </Link>
 );
 
-/* ── Skeleton card ── */
+/* ── Shimmering Skeleton Card for Pro Look ── */
 const SkeletonCard = ({ compact }) => (
-  <div className={`bg-white animate-pulse flex flex-col ${compact ? 'w-[190px] flex-shrink-0' : ''}`}>
-    <div className={`bg-gray-200 w-full ${compact ? 'h-[160px]' : 'h-[200px]'}`} />
+  <div className={`bg-white flex flex-col h-full border border-gray-100 ${compact ? 'w-[190px] flex-shrink-0' : ''}`}>
+    <div className={`relative overflow-hidden bg-gray-200 ${compact ? 'h-[160px]' : 'h-[200px]'}`}>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+    </div>
     <div className="p-3 flex flex-col gap-2">
-      <div className="h-3 bg-gray-200 rounded w-3/4" />
-      <div className="h-3 bg-gray-200 rounded w-full" />
-      <div className="h-3 bg-gray-200 rounded w-1/2" />
-      <div className="h-5 bg-gray-200 rounded mt-1 w-2/3" />
-      {!compact && <div className="h-8 bg-gray-200 rounded-full mt-1" />}
+      <div className="h-3 bg-gray-100 rounded w-3/4 animate-pulse" />
+      <div className="h-3 bg-gray-100 rounded w-full animate-pulse" />
+      <div className="h-4 bg-gray-100 rounded mt-1 w-2/3 animate-pulse" />
+      {!compact && <div className="h-8 bg-gray-100 rounded-full mt-2 w-full animate-pulse" />}
     </div>
   </div>
 );
@@ -273,13 +274,25 @@ const HomePage = () => {
           {/* Tile grid — gap-px gives Amazon's signature divider appearance */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-px bg-[#EAEDED]">
             {loadingProd
-              ? [...Array(10)].map((_, i) => <div key={i} className="bg-white"><SkeletonCard /></div>)
-              : recommended.map((p) => (
-                  <div key={p.id} className="bg-white h-full">
+            ? [...Array(10)].map((_, i) => <div key={i} className="bg-white"><SkeletonCard /></div>)
+            : recommended.length > 0 
+              ? recommended.map((p) => (
+                  <div key={p.id} className="bg-white h-full hover:shadow-lg transition-shadow duration-300">
                     <ProductCard product={p} />
                   </div>
                 ))
-            }
+              : (
+                <div className="col-span-full bg-white text-center py-20 px-4">
+                  <div className="max-w-md mx-auto">
+                    <div className="inline-block p-4 rounded-full bg-blue-50 mb-4">
+                      <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                    </div>
+                    <h3 className="text-[19px] font-bold text-[#0F1111] mb-2 text-center">Reaching our servers...</h3>
+                    <p className="text-[14px] text-gray-600 mb-6 text-center">Our backend might be waking up from a nap (Render Cold Start). Hang tight, it usually takes about 30 seconds!</p>
+                  </div>
+                </div>
+              )
+          }
           </div>
 
           <div className="text-center py-4 border-t border-[#EAEDED]">

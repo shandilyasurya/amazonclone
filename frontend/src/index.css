@@ -301,6 +301,30 @@ body {
   line-height: 1.4;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --amz-orange: #FF9900;
+    --amz-yellow: #febd69;
+    --amz-blue: #232f3e;
+    --amz-light-blue: #37475a;
+    --amz-gray: #f3f3f3;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .badge-best-seller {
   background-color: #FF9900;
   color: #0F1111;

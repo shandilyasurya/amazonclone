@@ -256,12 +256,18 @@ const Navbar = ({ onOpenSidebar }) => {
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#fff'; setShowAccount(true); }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'transparent'; setShowAccount(false); }}
         >
-          <span style={{ fontSize: '11px', color: '#ccc', lineHeight: 1, marginBottom: '3px' }}>
-            Hello, {userInfo ? userInfo.name.split(' ')[0] : 'sign in'}
-          </span>
-          <span style={{ fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '3px', lineHeight: 1, whiteSpace: 'nowrap' }}>
-            Account &amp; Lists <ChevronDown size={11} />
-          </span>
+          <div className="flex flex-col justify-center">
+            <span style={{ fontSize: '11px', color: '#ccc', lineHeight: 1, marginBottom: '2px' }}>
+              Hello, {userInfo ? (
+                <span className="animate-[fadeIn_0.5s_ease-out] text-white font-medium">
+                  {userInfo.name?.split(' ')[0] || 'User'}
+                </span>
+              ) : 'sign in'}
+            </span>
+            <span style={{ fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '2px', lineHeight: 1, whiteSpace: 'nowrap' }}>
+              Account &amp; Lists <ChevronDown size={11} className="mt-0.5 text-[#aaa]" />
+            </span>
+          </div>
 
           {/* Dropdown */}
           {showAccount && (
