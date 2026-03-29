@@ -71,7 +71,7 @@ const frontendDist = path.join(__dirname, '../frontend/dist');
 app.use(express.static(frontendDist));
 
 // Catch-all route for SPA fallback
-app.get('(.*)', (req, res, next) => {
+app.get(/.*/, (req, res, next) => {
   // Skip if it's an API request - let the error handler catch those
   if (req.url.startsWith('/api')) {
     return next();
