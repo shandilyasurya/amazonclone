@@ -66,7 +66,7 @@ const seedDatabase = async () => {
       ],
       'Sports & Fitness': [
         { name: 'Nivia Storm Football (Size 5)', image: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&q=80', price: '499.00', brand: 'Nivia' },
-        { name: 'Yonex Muscle Power 29 Lite Badminton Racket', image: 'https://images.unsplash.com/photo-1626243313104-c5a47805adfb?w=800&q=80', price: '1999.00', brand: 'Yonex' },
+        { name: 'Yonex Muscle Power 29 Lite Badminton Racket', image: '/images/products/yonex_racket.png', price: '1999.00', brand: 'Yonex' },
         { name: 'AmazonBasics Rubber Encased Hex Dumbbell Set', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80', price: '2499.00', brand: 'AmazonBasics' },
         { name: 'Boldfit Yoga Mat for Men and Women', image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800&q=80', price: '699.00', brand: 'Boldfit' },
         { name: 'Kore PVC Weight Lifting Home Gym Equipment Set', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', price: '1599.00', brand: 'Kore' }
