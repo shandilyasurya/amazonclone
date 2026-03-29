@@ -15,6 +15,7 @@ import OrdersPage from './pages/OrdersPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CreateReviewPage from './pages/CreateReviewPage';
+import WishlistPage from './pages/WishlistPage';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="cart" element={<CartPage />} />
           <Route path="orders" element={<OrdersPage />} />
+          <Route path="wishlist" element={<WishlistPage />} />
           <Route path="review/create-review/:id" element={<CreateReviewPage />} />
           <Route path="order-confirmation/:id" element={<OrderConfirmationPage />} />
           <Route path="order-confirmation" element={<OrderConfirmationPage />} />

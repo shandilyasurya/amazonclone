@@ -322,10 +322,18 @@ const Navbar = ({ onOpenSidebar }) => {
               )}
               <div style={{ padding: '12px 16px', borderTop: '1px solid #eee' }}>
                 <p style={{ fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Your Account</p>
-                <Link to="/orders" style={{ display: 'block', fontSize: '12px', color: '#0F1111', padding: '2px 0' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#C7511F')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#0F1111')}
-                >Your Orders</Link>
+                <div className="flex flex-col gap-1.5">
+                  <Link to="/orders" style={{ display: 'block', fontSize: '12px', color: '#0F1111', padding: '2px 0' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#C7511F')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#0F1111')}
+                  >Your Orders</Link>
+                  <Link to="/wishlist" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#0F1111', padding: '2px 0' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#C7511F')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#0F1111')}
+                  >
+                    Your Wish List
+                  </Link>
+                </div>
               </div>
             </div>
           )}

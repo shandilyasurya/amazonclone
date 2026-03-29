@@ -2,7 +2,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAddToCartMutation } from '../slices/cartApiSlice';
 import StarRating from './StarRating';
-import { ShoppingCart, Heart } from 'lucide-react';
+import { ShoppingCart, Heart, Loader2 } from 'lucide-react';
+import { useAddToWishlistMutation, useRemoveFromWishlistMutation, useGetWishlistQuery } from '../slices/wishlistApiSlice';
+import { toast } from 'react-toastify';
 
 const formatINR = (price) =>
   new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(price);
@@ -11,6 +13,9 @@ const ProductCard = ({ product, compact = false, showBestSellerBadge = false }) 
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
   const [addToCart, { isLoading: addingCart }] = useAddToCartMutation();
+  const [addToWishlist, { isLoading: addingWishlist }] = useAddToWishlistMutation();
+  const [removeFromWishlist, { isLoading: removingWishlist }] = useRemoveFromWishlistMutation();
+  const { data: wishlistData } = useGetWishlistQuery(undefined, { skip: !userInfo });
 
   if (!product) return null;
 
@@ -29,10 +34,31 @@ const ProductCard = ({ product, compact = false, showBestSellerBadge = false }) 
     e.preventDefault();
     e.stopPropagation();
     if (!userInfo) { navigate('/login'); return; }
-    try { await addToCart({ productId: product.id, quantity: 1 }).unwrap(); } catch {}
+    try { 
+      await addToCart({ productId: product.id, quantity: 1 }).unwrap();
+      toast.success('Added to Cart');
+    } catch {}
   };
 
-  const handleWishlist = (e) => { e.preventDefault(); e.stopPropagation(); };
+  const isInWishlist = wishlistData?.data?.some(item => item.product_id === product.id);
+
+  const handleWishlist = async (e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if (!userInfo) { navigate('/login'); return; }
+
+    try {
+      if (isInWishlist) {
+        await removeFromWishlist(product.id).unwrap();
+        toast.info('Removed from Wish List');
+      } else {
+        await addToWishlist({ productId: product.id }).unwrap();
+        toast.success('Added to Wish List');
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || 'Wishlist update failed');
+    }
+  };
 
   return (
     <Link
@@ -66,9 +92,22 @@ const ProductCard = ({ product, compact = false, showBestSellerBadge = false }) 
         {/* Wishlist hover button */}
         <button
           onClick={handleWishlist}
-          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/90 hover:bg-white rounded-full p-1.5 shadow-md border border-amz-gray-3"
+          disabled={addingWishlist || removingWishlist}
+          className={`absolute bottom-2 right-2 transition-all duration-200 bg-white/90 hover:bg-white rounded-full p-1.5 shadow-md border border-amz-gray-3 ${
+            isInWishlist ? 'opacity-100 scale-110 !border-red-100 shadow-red-100' : 'opacity-0 group-hover:opacity-100'
+          }`}
+          title={isInWishlist ? 'Remove from Wish List' : 'Add to Wish List'}
         >
-          <Heart size={13} className="text-amz-gray-4 hover:text-red-500 transition-colors" />
+          {addingWishlist || removingWishlist ? (
+            <Loader2 size={13} className="animate-spin text-amz-gray-4" />
+          ) : (
+            <Heart 
+              size={13} 
+              className={`transition-colors ${
+                isInWishlist ? 'text-red-500 fill-red-500' : 'text-amz-gray-4 hover:text-red-500'
+              }`} 
+            />
+          )}
         </button>
       </div>
 

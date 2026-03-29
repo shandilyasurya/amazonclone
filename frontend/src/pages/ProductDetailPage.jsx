@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import { useAddToCartMutation } from '../slices/cartApiSlice';
+import { useAddToWishlistMutation } from '../slices/wishlistApiSlice';
 import { useGetReviewsQuery } from '../slices/reviewsApiSlice';
+import { toast } from 'react-toastify';
 import StarRating from '../components/StarRating';
 import QuantitySelector from '../components/QuantitySelector';
 import { ShoppingCart, Zap, Heart, Shield, Truck, RotateCcw, CheckCircle, ChevronRight, AlertCircle, Pencil, ThumbsUp } from 'lucide-react';
@@ -17,6 +19,7 @@ const ProductDetailPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const { data: response, isLoading, isError } = useGetProductDetailsQuery(id);
   const [addToCart, { isLoading: addingCart }] = useAddToCartMutation();
+  const [addToWishlist, { isLoading: addingWishlist }] = useAddToWishlistMutation();
   const { data: reviewsData } = useGetReviewsQuery(id);
 
   const [qty, setQty] = useState(1);
@@ -71,6 +74,16 @@ const ProductDetailPage = () => {
       await addToCart({ productId: product.id, quantity: qty }).unwrap();
       navigate('/checkout');
     } catch {}
+  };
+
+  const handleAddToWishlist = async () => {
+    if (!userInfo) { navigate('/login'); return; }
+    try {
+      await addToWishlist({ productId: product.id }).unwrap();
+      toast.success('Added to your Wish List');
+    } catch (err) {
+      toast.error(err?.data?.message || 'Failed to add to Wish List');
+    }
   };
 
   const inStock = product.stock > 0;
@@ -278,8 +291,13 @@ const ProductDetailPage = () => {
               <div className="flex justify-between"><span>Payment</span><span className="font-medium">EMI available</span></div>
             </div>
 
-            <button className="text-[13px] text-[#007185] hover:underline flex items-center gap-1 justify-center">
-              <Heart size={13} /> Add to Wish List
+            <button 
+              onClick={handleAddToWishlist}
+              disabled={addingWishlist}
+              className="text-[13px] text-[#007185] hover:text-[#C7511F] hover:underline flex items-center gap-1 justify-center mt-2 group transition-colors"
+            >
+              <Heart size={13} className={addingWishlist ? 'animate-pulse' : 'group-hover:fill-[#C7511F] group-hover:text-[#C7511F]'} />
+              {addingWishlist ? 'Adding…' : 'Add to Wish List'}
             </button>
           </div>
         </div>
