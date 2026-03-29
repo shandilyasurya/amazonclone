@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout } from './authSlice';
 
 const baseQuery = fetchBaseQuery({ 
-  baseUrl: '/api',
+  baseUrl: 'https://amazonclone-backend-hs31.onrender.com/api',
   credentials: 'include',
 });
 
