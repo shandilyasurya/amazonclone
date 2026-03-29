@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Trash2, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Heart, Trash2, ShoppingCart, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
 import { useGetWishlistQuery, useRemoveFromWishlistMutation } from '../slices/wishlistApiSlice';
 import { useAddToCartMutation } from '../slices/cartApiSlice';
-import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 const formatPrice = (price) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
@@ -12,15 +12,18 @@ const WishlistPage = () => {
   const { data, isLoading, isError } = useGetWishlistQuery();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const [addToCart] = useAddToCartMutation();
+  const [message, setMessage] = useState('');
 
   const items = data?.data || [];
 
   const handleRemove = async (productId) => {
     try {
       await removeFromWishlist(productId).unwrap();
-      toast.success('Removed from wishlist');
+      setMessage('Removed from wishlist');
+      setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      toast.error(err?.data?.message || 'Failed to remove from wishlist');
+      setMessage(err?.data?.message || 'Failed to remove from wishlist');
+      setTimeout(() => setMessage(''), 3000);
     }
   };
 
@@ -28,9 +31,11 @@ const WishlistPage = () => {
     try {
       await addToCart({ productId: product.id, quantity: 1 }).unwrap();
       await removeFromWishlist(product.id).unwrap();
-      toast.success('Moved to cart');
+      setMessage('Moved to cart');
+      setTimeout(() => setMessage(''), 3000);
     } catch (err) {
-      toast.error(err?.data?.message || 'Failed to add to cart');
+      setMessage(err?.data?.message || 'Failed to add to cart');
+      setTimeout(() => setMessage(''), 3000);
     }
   };
 
@@ -67,12 +72,23 @@ const WishlistPage = () => {
     <div className="bg-[#EAEDED] min-h-screen py-6">
       <div className="max-w-[1100px] mx-auto px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <h1 className="text-[28px] font-normal text-[#0F1111]">Your Wish List</h1>
           <Link to="/" className="text-[14px] text-[#007185] hover:text-[#C7511F] hover:underline flex items-center gap-1">
             <ArrowLeft size={14} /> Back to shopping
           </Link>
         </div>
+
+        {message && (
+          <div className={`mb-6 p-3 rounded border flex items-center gap-2 text-[14px] animate-in fade-in slide-in-from-top-2 duration-300 ${
+            message.includes('Failed') 
+              ? 'bg-red-50 border-red-200 text-red-800' 
+              : 'bg-green-50 border-green-200 text-green-800'
+          }`}>
+            {message.includes('Failed') ? <AlertCircle size={18} /> : <CheckCircle size={18} />}
+            {message}
+          </div>
+        )}
 
         {/* List */}
         <div className="bg-white rounded-sm shadow-sm border border-gray-200 divide-y divide-gray-100">

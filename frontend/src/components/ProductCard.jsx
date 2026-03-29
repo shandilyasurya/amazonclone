@@ -4,7 +4,6 @@ import { useAddToCartMutation } from '../slices/cartApiSlice';
 import StarRating from './StarRating';
 import { ShoppingCart, Heart, Loader2 } from 'lucide-react';
 import { useAddToWishlistMutation, useRemoveFromWishlistMutation, useGetWishlistQuery } from '../slices/wishlistApiSlice';
-import { toast } from 'react-toastify';
 
 const formatINR = (price) =>
   new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(price);
@@ -36,7 +35,6 @@ const ProductCard = ({ product, compact = false, showBestSellerBadge = false }) 
     if (!userInfo) { navigate('/login'); return; }
     try { 
       await addToCart({ productId: product.id, quantity: 1 }).unwrap();
-      toast.success('Added to Cart');
     } catch {}
   };
 
@@ -50,13 +48,11 @@ const ProductCard = ({ product, compact = false, showBestSellerBadge = false }) 
     try {
       if (isInWishlist) {
         await removeFromWishlist(product.id).unwrap();
-        toast.info('Removed from Wish List');
       } else {
         await addToWishlist({ productId: product.id }).unwrap();
-        toast.success('Added to Wish List');
       }
     } catch (err) {
-      toast.error(err?.data?.message || 'Wishlist update failed');
+      // Silently fail or handle error if needed
     }
   };
 

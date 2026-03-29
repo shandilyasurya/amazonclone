@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
@@ -63,6 +64,19 @@ app.use('/api/upload', uploadRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running' });
+});
+
+// Serve static files from frontend/dist
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
+
+// Catch-all route for SPA fallback
+app.get('*', (req, res, next) => {
+  // Skip if it's an API request - let the error handler catch those
+  if (req.url.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
 app.use(notFound);

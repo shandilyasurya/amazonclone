@@ -5,7 +5,6 @@ import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import { useAddToCartMutation } from '../slices/cartApiSlice';
 import { useAddToWishlistMutation } from '../slices/wishlistApiSlice';
 import { useGetReviewsQuery } from '../slices/reviewsApiSlice';
-import { toast } from 'react-toastify';
 import StarRating from '../components/StarRating';
 import QuantitySelector from '../components/QuantitySelector';
 import { ShoppingCart, Zap, Heart, Shield, Truck, RotateCcw, CheckCircle, ChevronRight, AlertCircle, Pencil, ThumbsUp } from 'lucide-react';
@@ -26,6 +25,7 @@ const ProductDetailPage = () => {
   const [selectedImg, setSelectedImg] = useState(0);
   const [activeTab, setActiveTab] = useState('description');
   const [cartMsg, setCartMsg] = useState('');
+  const [wishlistMsg, setWishlistMsg] = useState('');
 
   if (isLoading) {
     return (
@@ -80,9 +80,11 @@ const ProductDetailPage = () => {
     if (!userInfo) { navigate('/login'); return; }
     try {
       await addToWishlist({ productId: product.id }).unwrap();
-      toast.success('Added to your Wish List');
+      setWishlistMsg('Added to your Wish List');
+      setTimeout(() => setWishlistMsg(''), 3000);
     } catch (err) {
-      toast.error(err?.data?.message || 'Failed to add to Wish List');
+      setWishlistMsg(err?.data?.message || 'Failed to add to Wish List');
+      setTimeout(() => setWishlistMsg(''), 3000);
     }
   };
 
@@ -290,6 +292,13 @@ const ProductDetailPage = () => {
               <div className="flex justify-between"><span>Sold by</span><span className="font-medium text-[#007185]">{product.brand || 'Cloudtail India'}</span></div>
               <div className="flex justify-between"><span>Payment</span><span className="font-medium">EMI available</span></div>
             </div>
+
+            {wishlistMsg && (
+              <div className={`flex items-center gap-1 text-[13px] ${wishlistMsg.includes('Failed') ? 'text-[#B12704]' : 'text-[#007600]'}`}>
+                {wishlistMsg.includes('Failed') ? <AlertCircle size={14} /> : <CheckCircle size={14} />}
+                {wishlistMsg}
+              </div>
+            )}
 
             <button 
               onClick={handleAddToWishlist}
